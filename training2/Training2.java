@@ -14,11 +14,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+
 /**
+ * 今日の運勢は　です　願い事：　商い：　学問：　を表示します。
  * 実行クラス
  * @author e_kumakiri
  */
 public class Training2 {
+	/**
+	 * メインメソッド
+	 * @param args　引数　使用しない
+	 */
 	public static void main(String[] args) {
 		//事前準備
 		//パスの取得
@@ -26,12 +32,25 @@ public class Training2 {
 
 		// FileWriterクラスを宣言
 		FileWriter fw = null;
+		//BufferedReaderクラスを宣言
+		BufferedReader reader = null;
+
+		//日付生成のフォーマット宣言
+		DateFormat simpleDateFormat = null;
+		//Date型（現在）の生成
+		Date date = new Date();
+		//Date型をString型に変換
+		String now = new SimpleDateFormat("yyyyMMdd").format(date);
+		//ランダムにしたおみくじオブジェクトをリストから取得するための準備
+		Fortune fortune = null;
+		//箱の宣言(List)
+		List<Omikuji> list = null;
 
 		try {
 			//csvファイルの読み込み
 			List<String> line = Files.readAllLines(path);
 			//箱の宣言(List)
-			List<Omikuji> list = new ArrayList<Omikuji>();
+			list = new ArrayList<Omikuji>();
 
 			//50回分する
 			for (int i = 0; i < line.size(); i++) {
@@ -84,23 +103,19 @@ public class Training2 {
 
 			//System.inからInputStreamReaderクラスのオブジェクト作成
 			//BufferedReaderクラスのオブジェクト作成
-			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+			reader = new BufferedReader(new InputStreamReader(System.in));
 
 			//誕生日の入力
 			System.out.println("誕生日を入力してください(例：20150809)");
 
 			//日付入力のフォーマット（yyyyMMdd）
-			DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+			simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
 			//入力された値が正しいかチェック
 			simpleDateFormat.setLenient(false);
 			//readLine()メソッドを使って1行データを読み込む
 			String str = reader.readLine();
 			//入力したデータをDate型に変換
 			Date inputDate = simpleDateFormat.parse(str);
-			//Date型（現在）の生成
-			Date date = new Date();
-			//Date型をString型に変換
-			String now = new SimpleDateFormat("yyyyMMdd").format(date);
 
 			//ランダムオブジェクトを生成する（本日と入力した値のString型をInteger型に変換）
 			Random rand = new Random(Integer.parseInt(now) + Integer.parseInt(str));
@@ -109,7 +124,7 @@ public class Training2 {
 			fw = new FileWriter("/Users/e_kumakiri/Desktop/workspace/Training2/src/data.txt", true);
 
 			//ランダムにしたおみくじオブジェクトをリストから取得する
-			Fortune fortune = list.get(rand.nextInt(list.size()));
+			fortune = list.get(rand.nextInt(list.size()));
 			//コンソールに出力する
 			System.out.println(fortune.disp());
 			//ファイルに追記する
@@ -121,11 +136,34 @@ public class Training2 {
 			System.out.println("CSVファイルの読み込みに失敗しました。");
 			e.printStackTrace();
 
-		} catch (ParseException p) {
-			//存在しない日付を入力した場合
+		} catch (ParseException | NumberFormatException pn) {
+			//存在しない日付を入力した場合再入力を促す
 			System.out.println("日付が存在しません");
-			p.printStackTrace();
+			System.out.println("再入力をしてください");
+			try {
+				//再入力したデータのフォーマットをyyyyMMddにする
+				simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+				//入力された値が正しいかチェック
+				simpleDateFormat.setLenient(false);
+				//再入力した1行データを読み込む
+				String str2 = reader.readLine();
+				//入力したデータをDate型に変換
+				Date inputDate = simpleDateFormat.parse(str2);
+				//ランダムオブジェクトを生成する（本日と入力した値のString型をInteger型に変換）
+				Random rand2 = new Random(Integer.parseInt(now) + Integer.parseInt(str2));
 
+				// FileWriterクラスのオブジェクトを生成する
+				fw = new FileWriter("/Users/e_kumakiri/Desktop/workspace/Training2/src/data.txt", true);
+				//ランダムにしたおみくじオブジェクトをリストから取得する
+				fortune = list.get(rand2.nextInt(list.size()));
+				//コンソールに出力する
+				System.out.println(fortune.disp());
+				//ファイルに追記する
+				fw.write(fortune.disp());
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} finally {
 			if (fw != null) {
 				try {
