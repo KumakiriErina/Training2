@@ -10,8 +10,9 @@ public interface Fortune {
 	String DISP_STR = ResourceBundle.getBundle("fortune").getString("disp_str");
 
 	/**
+	 * 運勢を表示するための抽象メソッドです。
 	 * 運勢結果の表示（抽象メソッド）
-	 * @return　運勢
+	 * @return　運勢の表示
 	 */
 	String disp();
 }
