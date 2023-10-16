@@ -14,7 +14,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-
+/**
+ * 実行クラス
+ * @author e_kumakiri
+ */
 public class Training2 {
 	public static void main(String[] args) {
 		//事前準備
@@ -39,28 +42,28 @@ public class Training2 {
 
 				//switch文(具象クラスの生成)
 				switch (data[0]) {
-				case "[大吉]":
+				case "大吉":
 					//それぞれのオブジェクトを生成
 					omikuji = new GreatBlessing();
 					break;
 
-				case "[中吉]":
+				case "中吉":
 					omikuji = new MiddleBlassing();
 					break;
 
-				case "[小吉]":
+				case "小吉":
 					omikuji = new SmallBlessing();
 					break;
 
-				case "[末吉]":
+				case "末吉":
 					omikuji = new UncertinLuck();
 					break;
 
-				case "[吉]":
+				case "吉":
 					omikuji = new GoodBlessing();
 					break;
 
-				case "[凶]":
+				case "凶":
 					omikuji = new BadLuck();
 					break;
 
@@ -69,7 +72,7 @@ public class Training2 {
 					break;
 				}
 				//値をset
-				omikuji.setUnsei(data[0]);
+				omikuji.setUnsei();
 				omikuji.setNegaigoto(data[1]);
 				omikuji.setAkinai(data[2]);
 				omikuji.setGakumon(data[3]);
@@ -92,48 +95,43 @@ public class Training2 {
 			simpleDateFormat.setLenient(false);
 			//readLine()メソッドを使って1行データを読み込む
 			String str = reader.readLine();
-			//strの変換できたら、指定されたフォーマットでDate型を再度String型に変換
-			String check = simpleDateFormat.format(simpleDateFormat.parse(str));
+			//入力したデータをDate型に変換
+			Date inputDate = simpleDateFormat.parse(str);
 			//Date型（現在）の生成
 			Date date = new Date();
 			//Date型をString型に変換
 			String now = new SimpleDateFormat("yyyyMMdd").format(date);
 
-			//おみくじをランダムにする
-			Random rand = new Random(Integer.parseInt(now) + Integer.parseInt(check));
+			//ランダムオブジェクトを生成する（本日と入力した値のString型をInteger型に変換）
+			Random rand = new Random(Integer.parseInt(now) + Integer.parseInt(str));
 
-			//入力値と変換後日付を文字列にしたものを比較し、異なっていたらエラー
-			if (str.equals(check)) {
-				//正常
-			} else {
-				//半角数字以外の入力があった時はエラー
-				System.out.println("例の通りに入力してください。");
-			}
 			// FileWriterクラスのオブジェクトを生成する
 			fw = new FileWriter("/Users/e_kumakiri/Desktop/workspace/Training2/src/data.txt", true);
 
+			//ランダムにしたおみくじオブジェクトをリストから取得する
+			Fortune fortune = list.get(rand.nextInt(list.size()));
+			//コンソールに出力する
+			System.out.println(fortune.disp());
 			//ファイルに追記する
-			if (str.equals(check)) {
-				//正常な時に追記
-				Fortune fortune = list.get(rand.nextInt(list.size()));
-				fw.write(fortune.disp());
-			} else {
-				System.out.println("追記できません");
-			}
+			fw.write(fortune.disp());
+
 		} catch (IOException e) {
 			//エラーになった時
-			//CSVファイルの読み込みか、BufferedReaderの失敗か、data.txtへの書き込みの失敗
-			System.out.println("失敗しました");
+			//CSVファイルの読み込みか、data.txtへの書き込みの失敗
+			System.out.println("CSVファイルの読み込みに失敗しました。");
 			e.printStackTrace();
+
 		} catch (ParseException p) {
 			//存在しない日付を入力した場合
 			System.out.println("日付が存在しません");
 			p.printStackTrace();
+
 		} finally {
 			if (fw != null) {
 				try {
 					fw.close();
 				} catch (IOException e) {
+					//何もしない
 					;
 				}
 			}
