@@ -167,6 +167,8 @@ public class Training2 {
 					//何もしない
 					;
 				}
+				//条件を満たしたら抜ける
+				break;
 				}
 		}finally{
 			if (fw != null) {
