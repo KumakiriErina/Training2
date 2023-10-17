@@ -119,7 +119,6 @@ public class Training2 {
 
 			//ランダムオブジェクトを生成する（本日と入力した値のString型をInteger型に変換）
 			Random rand = new Random(Integer.parseInt(now) + Integer.parseInt(str));
-
 			// FileWriterクラスのオブジェクトを生成する
 			fw = new FileWriter("/Users/e_kumakiri/Desktop/workspace/Training2/src/data.txt", true);
 
@@ -137,16 +136,20 @@ public class Training2 {
 			e.printStackTrace();
 
 		} catch (ParseException | NumberFormatException pn) {
-			//存在しない日付を入力した場合再入力を促す
-			System.out.println("日付が存在しません");
-			System.out.println("再入力をしてください");
-			try {
+			//再入力のString型の宣言
+			String str2;
+			//再入力
+			while (true) {
+				//存在しない日付を入力した場合再入力を促す
+				System.out.println("誕生日を入力してください(例：20150809)");
+
+				try {
 				//再入力したデータのフォーマットをyyyyMMddにする
 				simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
 				//入力された値が正しいかチェック
 				simpleDateFormat.setLenient(false);
 				//再入力した1行データを読み込む
-				String str2 = reader.readLine();
+				str2 = reader.readLine();
 				//入力したデータをDate型に変換
 				Date inputDate = simpleDateFormat.parse(str2);
 				//ランダムオブジェクトを生成する（本日と入力した値のString型をInteger型に変換）
@@ -160,11 +163,12 @@ public class Training2 {
 				System.out.println(fortune.disp());
 				//ファイルに追記する
 				fw.write(fortune.disp());
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} finally {
+				} catch (Exception e) {
+					//何もしない
+					;
+				}
+				}
+		}finally{
 			if (fw != null) {
 				try {
 					fw.close();
