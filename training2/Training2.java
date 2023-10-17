@@ -163,12 +163,12 @@ public class Training2 {
 				System.out.println(fortune.disp());
 				//ファイルに追記する
 				fw.write(fortune.disp());
+				//条件を満たしたら抜ける
+				break;
 				} catch (Exception e) {
 					//何もしない
 					;
 				}
-				//条件を満たしたら抜ける
-				break;
 				}
 		}finally{
 			if (fw != null) {
